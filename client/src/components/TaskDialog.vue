@@ -4,8 +4,12 @@
       <v-form @submit.prevent="save">
         <v-card-text>
           <v-text-field v-model="name" label="Task name" maxlength="100" autofocus />
-          <v-text-field v-model="dailyGoal" type="number" min="0" label="Daily goal (minutes)" />
-          <v-text-field v-model="weeklyGoal" type="number" min="0" label="Weekly goal (minutes)" />
+          <v-btn-toggle v-model="unit" mandatory color="primary" class="mb-4" density="compact">
+            <v-btn value="minutes">Minutes</v-btn>
+            <v-btn value="hours">Hours</v-btn>
+          </v-btn-toggle>
+          <v-text-field v-model="displayDailyGoal" type="number" min="0" step="any" :label="`Daily goal (${unit})`" />
+          <v-text-field v-model="displayWeeklyGoal" type="number" min="0" step="any" :label="`Weekly goal (${unit})`" />
         </v-card-text>
 
         <v-card-actions>
@@ -33,6 +37,16 @@ const emit = defineEmits<{
 const name = ref('');
 const dailyGoal = ref<number | string>(60);
 const weeklyGoal = ref<number | string>(420);
+const unit = ref<'minutes' | 'hours'>('minutes');
+const unitMinutes = computed(() => unit.value === 'hours' ? 60 : 1);
+const displayDailyGoal = computed({
+  get: () => Number(dailyGoal.value) / unitMinutes.value,
+  set: (value: number | string) => { dailyGoal.value = Number(value) * unitMinutes.value; },
+});
+const displayWeeklyGoal = computed({
+  get: () => Number(weeklyGoal.value) / unitMinutes.value,
+  set: (value: number | string) => { weeklyGoal.value = Number(value) * unitMinutes.value; },
+});
 const canSave = computed(() => name.value.trim().length > 0 &&
   Number.isFinite(Number(dailyGoal.value)) && Number(dailyGoal.value) >= 0 &&
   Number.isFinite(Number(weeklyGoal.value)) && Number(weeklyGoal.value) >= 0,
