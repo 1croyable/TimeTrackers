@@ -7,9 +7,9 @@ import path from 'path'
 import viteCompression from "vite-plugin-compression"; //npm i vite-plugin-compression -D 
 export default defineConfig({
   server: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     port: 5173,
-    strictPort: false, // 若3000端口被占用,是否直接结束项目
+    strictPort: true, // Keep the development URL on port 5173.
     https: false, // 是否开启 https
     open: true, // 是否自动在浏览器打开
   },
@@ -23,12 +23,6 @@ export default defineConfig({
     rollupOptions: {
       // input: '/path/to/main.ts' // 覆盖默认的 .html 入口
     },
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    }
   },
   resolve: {
     // 配置项目路径别名，在开发时不需要写完整的路径名称
