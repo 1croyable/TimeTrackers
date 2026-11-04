@@ -5,24 +5,6 @@ import { localDate } from '../utilities/time';
 const STORAGE_KEY = 'timetrack-v1';
 const TASK_COLORS = ['#8066ff', '#44c780', '#65b5ff', '#ffa337', '#f369a6'];
 
-function createDefaultTasks(): Task[] {
-  const names = [
-    'PyTorch Learning',
-    'IA04 - Multi-Agent Project',
-    'IA03 - Knowledge Graph',
-    'English Vocabulary',
-    'Course Revision',
-  ];
-  const weeklyGoals = [840, 480, 360, 420, 420];
-
-  return names.map((name, index) => ({
-    id: index + 1,
-    name,
-    weeklyGoalMinutes: weeklyGoals[index],
-    todaysGoalMinutes: 60,
-  }));
-}
-
 export function useTimeTracker() {
   const tasks = ref<Task[]>([]);
   const sessions = ref<Session[]>([]);
@@ -41,8 +23,6 @@ export function useTimeTracker() {
       tasks.value = savedData.tasks;
       sessions.value = savedData.sessions;
       activeSession.value = savedData.active || null;
-    } else {
-      tasks.value = createDefaultTasks();
     }
   } catch {
     error.value = 'Could not read saved data.';
@@ -359,4 +339,6 @@ export function useTimeTracker() {
     importBackup,
   };
 }
+
+
 
